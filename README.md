@@ -10,6 +10,7 @@
 - [Usage Instructions](#usage-instructions)
 - [Project Structure](#project-structure)
 - [Contributors](#contributors)
+- [Project Timeline](#project-timeline)
 - [Chagelog](#changelog)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
