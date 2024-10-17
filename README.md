@@ -74,8 +74,7 @@ To use the Self Attendance Tracker after setup:
 ## Project Structure
 The project directory is organized as follows:
 ```bash
-.
-└── Self-Attendance-Tracker/
+Self-Attendance-Tracker/
     ├── app/
     │   └── src/
     │       ├── manifests/
@@ -126,6 +125,14 @@ The timeline for the Self Attendance Tracker project is as follows:
 ### [Version 1.2.0] - 2024-09-21
 - Added functionality for managing extra classes.
 - Enhanced performance and updated documentation.
+
+### [Version 1.2.1] - 2024-09-27
+- Fixed minor bugs (text displays) for better and user-friendly interface
+
+### [Version 1.2.2] - 2024-10-1
+- Production of Login and Register function for better security
+
+- Currently Under Development
 
 ## Acknowledgments
 Special thanks to Self-Attendance-Tracker (https://github.com/rahul-gill/Self-Attendance-Tracker.git) and Rahul Gill for their foundational work.
