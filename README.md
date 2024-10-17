@@ -36,13 +36,14 @@ Key features of the Self Attendance Tracker include:
 - **Weekly Schedule Creation**: Set up a weekly schedule with automatic repetition of classes.
 - **Extra Classes Management**: Add additional classes outside the regular schedule.
 - **Attendance Records**: Access detailed records for specific courses.
+- **Account Authentication**: It has account authentication for better authorization of the schedule
 
 ## Technologies Used
 The Self Attendance Tracker project uses:
 - **Programming Languages**: [ Kotlin, Ruby, Java]
 - **Frameworks/Libraries**: [Gradle, SQL Delight]
-- **Databases**: [SQL Lite]
-- **Other Tools**: [Git, Docker]
+- **Database**: [SQL Lite]
+- **Other Tools**: [Git]
 
 ## Setup and Installation
 To set up the Self Attendance Tracker locally, follow these steps:
