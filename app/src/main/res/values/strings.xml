@@ -20,14 +20,14 @@
     <string name="course_detail_card_transition" translatable="false">course_details_card_%1$d</string>
     <string name="course_detail_page_transition" translatable="false">course_details_page</string>
 
-    <string name="app_theme_key"  translatable="false">app_theme</string>
+    <string name="app_theme_key" translatable="false">app_theme</string>
     <string name="app_theme_title">App Theme</string>
-    <string name="pure_dark_key"  translatable="false">pure_dark</string>
+    <string name="pure_dark_key" translatable="false">pure_dark</string>
     <string name="pure_dark_title">Pure Dark in Dark Theme</string>
     <string name="material_you_dynamic_color_key" translatable="false">material_you_dynamic_color</string>
     <string name="material_you_dynamic_color_title">Material You Dynamic Color</string>
     <string name="theming_category_title">Theming</string>
-    <string name="default_main_pager_tab_key"  translatable="false">default_main_pager_tab</string>
+    <string name="default_main_pager_tab_key" translatable="false">default_main_pager_tab</string>
     <string name="default_main_page_tab_title">Default Main Page Tab</string>
     <string name="settings">Settings</string>
     <string name="time_format">Time Format</string>
@@ -35,7 +35,7 @@
     <string name="double_repr">%.2f%%</string>
 
 
-    <string-array name="theme_entries"  translatable="false">
+    <string-array name="theme_entries" translatable="false">
         <item>system</item>
         <item>light</item>
         <item>dark</item>
@@ -47,7 +47,7 @@
     </string-array>
 
 
-    <string-array name="default_main_pager_tab_entries"  translatable="false">
+    <string-array name="default_main_pager_tab_entries" translatable="false">
         <item>today</item>
         <item>overall</item>
     </string-array>
@@ -166,8 +166,10 @@
     <string name="do_nothing">Do nothing</string>
     <string name="can_be_absent_in_n_classes">Can be absent in %1$d classes</string>
     <string name="need_to_attend_n_more_classes">Need to attend %1$d more classes</string>
-    <string name="cannot_miss_next_class">Cannot miss next claas</string>
+    <string name="cannot_miss_next_class">Cannot miss next class</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="security">Security</string>
+    <string name="change_password">Change Password</string>
 
 
 </resources>

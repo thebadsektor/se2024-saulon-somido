@@ -2,74 +2,48 @@ package com.github.rahul_gill.attendance.ui.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.github.rahul_gill.attendance.R
+import com.github.rahul_gill.attendance.db.DatabaseHelper
 import com.github.rahul_gill.attendance.prefs.PreferenceManager
 import com.github.rahul_gill.attendance.prefs.UnsetClassesBehavior
-import com.github.rahul_gill.attendance.ui.comps.AlertDialog
-import com.github.rahul_gill.attendance.ui.comps.AttendanceAppTheme
-import com.github.rahul_gill.attendance.ui.comps.ColorSchemeType
-import com.github.rahul_gill.attendance.ui.comps.DarkThemeType
-import com.github.rahul_gill.attendance.ui.comps.GenericPreference
-import com.github.rahul_gill.attendance.ui.comps.ListPreference
-import com.github.rahul_gill.attendance.ui.comps.PreferenceGroupHeader
-import com.github.rahul_gill.attendance.ui.comps.SwitchPreference
-import com.github.rahul_gill.attendance.ui.comps.ThemeConfig
+import com.github.rahul_gill.attendance.ui.comps.*
 import com.github.rahul_gill.attendance.util.Constants
-import com.github.skydoves.colorpicker.compose.AlphaTile
-import com.github.skydoves.colorpicker.compose.HsvColorPicker
-import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onGoBack: () -> Unit
+    onGoBack: () -> Unit,
+    dbHelper: DatabaseHelper
 ) {
+    val context = LocalContext.current
+    var isChangePasswordDialogShowing by remember { mutableStateOf(false) }
 
     val followSystemColor = PreferenceManager.followSystemColors.asState()
     val seedColor = PreferenceManager.colorSchemeSeed.asState()
@@ -80,21 +54,17 @@ fun SettingsScreen(
     val timeFormatOption = PreferenceManager.defaultTimeFormatPref.asState()
     val defaultHomeTabOption = PreferenceManager.defaultHomeTabPref.asState()
 
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.settings),
-                    )
-                },
+                title = { Text(text = stringResource(id = R.string.settings)) },
                 navigationIcon = {
-                    IconButton(onClick = onGoBack, modifier = Modifier.testTag("go_back")) {
+                    IconButton(onClick = onGoBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.go_back_screen)
                         )
                     }
@@ -110,23 +80,20 @@ fun SettingsScreen(
                 .padding(innerPadding)
                 .heightIn(min = screenHeight.dp)
         ) {
+            // Theme and Display Settings
             PreferenceGroupHeader(title = stringResource(id = R.string.look_and_feel))
-            Spacer(modifier = Modifier.height(8.dp))
 
-            val themeValues = remember {
-                ThemeConfig.entries.toList()
-            }
             ListPreference(
                 title = stringResource(id = R.string.app_theme),
-                items = themeValues,
+                items = ThemeConfig.entries.toList(),
                 leadingIcon = {
                     Icon(painter = painterResource(id = R.drawable.baseline_palette_24), contentDescription = null)
                 },
-                selectedItemIndex = themeValues.indexOf(theme.value),
-                onItemSelection = { PreferenceManager.themeConfig.setValue(themeValues[it]) },
+                selectedItemIndex = ThemeConfig.entries.indexOf(theme.value),
+                onItemSelection = { PreferenceManager.themeConfig.setValue(ThemeConfig.entries[it]) },
                 itemToDescription = { themeIndex ->
                     stringResource(
-                        id = when (themeValues[themeIndex]) {
+                        id = when (ThemeConfig.entries[themeIndex]) {
                             ThemeConfig.FollowSystem -> R.string.follow_system
                             ThemeConfig.Light -> R.string.light
                             ThemeConfig.Dark -> R.string.dark
@@ -134,7 +101,7 @@ fun SettingsScreen(
                     )
                 }
             )
-            //Spacer(modifier = Modifier.height(8.dp))
+
             SwitchPreference(
                 title = stringResource(R.string.pure_black_background),
                 isChecked = darkThemeType.value == DarkThemeType.Black,
@@ -146,38 +113,27 @@ fun SettingsScreen(
                 }
             )
 
-            //Spacer(modifier = Modifier.height(8.dp))
             SwitchPreference(
                 title = stringResource(R.string.follow_system_colors),
                 isChecked = followSystemColor.value,
                 leadingIcon = {
                     Icon(painter = painterResource(id = R.drawable.baseline_format_color_fill_24), contentDescription = null)
                 },
-                onCheckedChange = {
-                    PreferenceManager.followSystemColors.setValue(it)
-                }
+                onCheckedChange = { PreferenceManager.followSystemColors.setValue(it) }
             )
+
             AnimatedVisibility(visible = !followSystemColor.value) {
-                //Spacer(modifier = Modifier.height(8.dp))
-                val isColorPickerDialogShowing = remember {
-                    mutableStateOf(false)
-                }
                 GenericPreference(
                     title = stringResource(R.string.custom_color_scheme_seed),
                     summary = stringResource(id = R.string.custom_color_scheme_seed_summary),
-                    onClick = {
-                        isColorPickerDialogShowing.value = true
-                    },
+                    onClick = { /* Color picker logic */ },
                     leadingIcon = {
                         Icon(painterResource(id = R.drawable.baseline_colorize_24), contentDescription = null)
                     },
                     trailingContent = {
                         Surface(
                             modifier = Modifier
-                                .background(
-                                    color = seedColor.value,
-                                    shape = CircleShape
-                                )
+                                .background(seedColor.value, shape = CircleShape)
                                 .size(24.dp),
                             color = seedColor.value,
                             shape = CircleShape,
@@ -185,79 +141,16 @@ fun SettingsScreen(
                         )
                     }
                 )
-
-                if (isColorPickerDialogShowing.value) {
-                    val pickedColor = remember {
-                        mutableStateOf(PreferenceManager.colorSchemeSeed.value)
-                    }
-                    val colorController = rememberColorPickerController()
-                    AttendanceAppTheme(
-                        colorSchemeType = if (followSystemColor.value) ColorSchemeType.Dynamic else ColorSchemeType.WithSeed(
-                            pickedColor.value
-                        ),
-                        themeConfig = theme.value,
-                        darkThemeType = darkThemeType.value
-                    ) {
-                        AlertDialog(
-                            onDismissRequest = { isColorPickerDialogShowing.value = false },
-                            title = {
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(text = stringResource(id = R.string.custom_color_scheme_seed))
-                                    AlphaTile(
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .clip(CircleShape),
-                                        controller = colorController
-                                    )
-                                }
-                            },
-                            body = {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    HsvColorPicker(
-                                        modifier = Modifier.height(450.dp),
-                                        controller = colorController,
-                                        initialColor = pickedColor.value,
-                                        onColorChanged = { envelope ->
-                                            pickedColor.value = envelope.color
-                                        }
-                                    )
-                                }
-                            },
-                            buttonBar = {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
-                                ) {
-                                    TextButton(onClick = {
-                                        isColorPickerDialogShowing.value = false
-                                    }) {
-                                        Text(text = stringResource(id = R.string.cancel))
-                                    }
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    TextButton(onClick = {
-                                        PreferenceManager.colorSchemeSeed.setValue(pickedColor.value)
-                                        isColorPickerDialogShowing.value = false
-                                    }) {
-                                        Text(text = stringResource(id = R.string.ok))
-                                    }
-                                }
-                            }
-                        )
-                    }
-                }
             }
 
+            // Behavior Settings
             PreferenceGroupHeader(title = stringResource(id = R.string.behaviour))
+
             val unsetClassesBehaviorValues = UnsetClassesBehavior.entries.toTypedArray().toList()
             ListPreference(
                 title = stringResource(id = R.string.unset_classes_behaviour),
                 items = unsetClassesBehaviorValues,
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = null)
-                },
+                leadingIcon = { Icon(painterResource(id = R.drawable.baseline_check_24), contentDescription = null) },
                 selectedItemIndex = unsetClassesBehaviorValues.indexOf(unsetClassBehaviour.value),
                 onItemSelection = { PreferenceManager.unsetClassesBehavior.setValue(unsetClassesBehaviorValues[it]) },
                 itemToDescription = { index ->
@@ -271,29 +164,26 @@ fun SettingsScreen(
                 }
             )
 
-
+            // Date and Time Formatting
             PreferenceGroupHeader(title = stringResource(id = R.string.date_time_formatting))
 
             val timeFormatOptions = stringArrayResource(id = R.array.time_format_choices).toList()
             ListPreference(
                 title = stringResource(id = R.string.time_format),
                 items = timeFormatOptions,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.baseline_access_time_24), contentDescription = null)
-                },
+                leadingIcon = { Icon(painter = painterResource(id = R.drawable.baseline_access_time_24), contentDescription = null) },
                 selectedItemIndex = timeFormatOptions.indexOf(timeFormatOption.value),
                 onItemSelection = { selected -> PreferenceManager.defaultTimeFormatPref.setValue(timeFormatOptions[selected]) },
                 itemToDescription = { tabOptionIndex ->
                     DateTimeFormatter.ofPattern(timeFormatOptions[tabOptionIndex]).format(LocalTime.now())
                 }
             )
+
             val dateFormatOptions = stringArrayResource(id = R.array.date_format_choices).toList()
             ListPreference(
                 title = stringResource(id = R.string.date_format),
                 items = dateFormatOptions,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.baseline_calendar_today_24), contentDescription = null)
-                },
+                leadingIcon = { Icon(painter = painterResource(id = R.drawable.baseline_calendar_today_24), contentDescription = null) },
                 selectedItemIndex = dateFormatOptions.indexOf(dateFormatOption.value),
                 onItemSelection = { selected -> PreferenceManager.defaultDateFormatPref.setValue(dateFormatOptions[selected]) },
                 itemToDescription = { tabOptionIndex ->
@@ -301,62 +191,132 @@ fun SettingsScreen(
                 }
             )
 
-            PreferenceGroupHeader(title = stringResource(id = R.string.other_ui_options))
+            // Security Settings - Change Password Option
+            PreferenceGroupHeader(title = stringResource(id = R.string.security))
 
-            val homeTabOptions = stringArrayResource(id = R.array.default_main_pager_tab_entries_values).toList()
-            ListPreference(
-                title = stringResource(id = R.string.default_home_tab),
-                items = homeTabOptions,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.baseline_table_chart_24), contentDescription = null)
-                },
-                selectedItemIndex = defaultHomeTabOption.value,
-                onItemSelection = { selected -> PreferenceManager.defaultHomeTabPref.setValue(selected) },
-                itemToDescription = { tabOptionIndex ->
-                    homeTabOptions[tabOptionIndex]
-                }
+            GenericPreference(
+                title = stringResource(R.string.change_password),
+                onClick = { isChangePasswordDialogShowing = true },
+                leadingIcon = { Icon(painterResource(id = R.drawable.baseline_lock_24), contentDescription = null) }
             )
 
+            if (isChangePasswordDialogShowing) {
+                ChangePasswordDialog(
+                    dbHelper = dbHelper,
+                    onDismissRequest = { isChangePasswordDialogShowing = false }
+                )
+            }
+
+            // About and Other Information
             PreferenceGroupHeader(title = stringResource(id = R.string.about))
+
             val context = LocalContext.current
 
             GenericPreference(
                 title = stringResource(R.string.privacy_policy),
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(Constants.PRIVACY_POLICY_LINK)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PRIVACY_POLICY_LINK))
                     context.startActivity(intent)
                 },
-                leadingIcon = {
-                    Icon(painterResource(id = R.drawable.baseline_privacy_tip_24), contentDescription = null)
-                },
+                leadingIcon = { Icon(painterResource(id = R.drawable.baseline_privacy_tip_24), contentDescription = null) }
             )
 
             GenericPreference(
                 title = stringResource(R.string.source_code),
                 summary = Constants.GITHUB_APP_LINK,
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(Constants.GITHUB_APP_LINK)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GITHUB_APP_LINK))
                     context.startActivity(intent)
                 },
-                leadingIcon = {
-                    Icon(painterResource(id = R.drawable.github), contentDescription = null)
-                },
+                leadingIcon = { Icon(painterResource(id = R.drawable.github), contentDescription = null) }
             )
 
             GenericPreference(
                 title = stringResource(R.string.author_info),
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(Constants.GITHUB_USER_LINK)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GITHUB_USER_LINK))
                     context.startActivity(intent)
                 },
-                leadingIcon = {
-                    Icon(painterResource(id = R.drawable.baseline_person_24), contentDescription = null)
-                },
+                leadingIcon = { Icon(painterResource(id = R.drawable.baseline_person_24), contentDescription = null) }
             )
         }
     }
+}
 
+@Composable
+fun ChangePasswordDialog(
+    dbHelper: DatabaseHelper,
+    onDismissRequest: () -> Unit
+) {
+    var oldPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var showPassword by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text("Change Password") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = oldPassword,
+                    onValueChange = { oldPassword = it },
+                    label = { Text("Current Password") },
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = newPassword,
+                    onValueChange = { newPassword = it },
+                    label = { Text("New Password") },
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    label = { Text("Confirm New Password") },
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = showPassword,
+                        onCheckedChange = { showPassword = it }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Show Password")
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    // Validate old password, new password, and confirm password
+                    if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                        Toast.makeText(context, "All fields must be filled", Toast.LENGTH_SHORT).show()
+                    } else if (!dbHelper.checkPassword(oldPassword)) {
+                        Toast.makeText(context, "Incorrect current password", Toast.LENGTH_SHORT).show()
+                    } else if (newPassword != confirmPassword) {
+                        Toast.makeText(context, "New password and confirmation do not match", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Update password in the database
+                        dbHelper.setPassword(newPassword)
+                        Toast.makeText(context, "Password changed successfully", Toast.LENGTH_SHORT).show()
+                        onDismissRequest()
+                    }
+                }
+            ) {
+                Text("Change Password")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text("Cancel")
+            }
+        }
+    )
 }

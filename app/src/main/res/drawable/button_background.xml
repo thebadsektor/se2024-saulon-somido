@@ -1,0 +1,16 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Rounded corners -->
+    <corners android:radius="12dp" />
+
+    <!-- Button padding -->
+    <padding
+        android:left="16dp"
+        android:right="16dp"
+        android:top="8dp"
+        android:bottom="8dp" />
+
+    <!-- Optional border (stroke) -->
+    <stroke
+        android:width="2dp"
+        android:color="#2E7D32" />
+</shape>

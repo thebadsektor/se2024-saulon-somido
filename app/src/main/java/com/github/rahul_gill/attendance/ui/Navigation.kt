@@ -26,6 +26,7 @@ import com.github.rahul_gill.attendance.db.AttendanceRecordHybrid
 import com.github.rahul_gill.attendance.db.CourseClassStatus
 import com.github.rahul_gill.attendance.db.CourseDetailsOverallItem
 import com.github.rahul_gill.attendance.db.DBOps
+import com.github.rahul_gill.attendance.db.DatabaseHelper
 import com.github.rahul_gill.attendance.ui.screens.CourseAttendanceRecordScreen
 import com.github.rahul_gill.attendance.ui.screens.CourseDetailsScreen
 import com.github.rahul_gill.attendance.ui.screens.CourseEditScreen
@@ -65,7 +66,8 @@ sealed interface Screen : Parcelable {
 
 @Composable
 fun RootNavHost(
-    dbOps: DBOps = DBOps.instance
+    dbOps: DBOps = DBOps.instance,
+    dbHelper: DatabaseHelper = DatabaseHelper(LocalContext.current)
 ) {
     val navController = rememberNavController<Screen>(Screen.Main)
     val context = LocalContext.current
@@ -143,7 +145,8 @@ fun RootNavHost(
 
             Screen.Settings -> {
                 SettingsScreen(
-                    onGoBack = { navController.pop() }
+                    onGoBack = { navController.pop() },
+                    dbHelper = dbHelper
                 )
             }
 
