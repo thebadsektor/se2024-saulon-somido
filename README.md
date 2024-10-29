@@ -75,28 +75,101 @@ To use the Self Attendance Tracker after setup:
 ## Project Structure
 The project directory is organized as follows:
 ```bash
-Self-Attendance-Tracker/
-    ├── app/
-    │   └── src/
-    │       ├── manifests/
-    │       ├── kotlin+java/
-    │       │   ├── debug/
-    │       │   ├── main/
-    │       │   └── src/
-    │       └── res/
-    │           ├── drawable/
-    │           ├── mipmap/
-    │           ├── values/
-    │           └── xml/
-    ├── config/
-    │   └── detekt/
-    ├── fastlane/
-    │   └── metadata/
-    │       └── android/
-    │           └── en-US/
-    │               └── images/
-    └── gradle/
-        └── wrapper
+se2024-saulon-somido/
+├── app/
+│   └── src/
+│       ├── manifests/
+│       │   └── AndroidManifest.xml
+│       ├── kotlin+java/
+│       │   ├── debug/
+│       │   └── main/
+│       │       └── com.github.rahul_gill.attendance/
+│       │           ├── db/
+│       │           │   ├── ClassDetail.kt
+│       │           │   ├── CourseClassStatus.kt
+│       │           │   ├── CourseDetailsOverallItem.kt
+│       │           │   ├── DatabaseHelper.java
+│       │           │   ├── DBOps.kt
+│       │           │   ├── ExtraClassDetails.kt
+│       │           │   ├── ExtraClassTimings.kt
+│       │           │   ├── FutureThingCalculations.kt
+│       │           │   ├── SqldelightAdapters.kt
+│       │           │   └── TodayCourseItem.kt
+│       │           ├── prefs/
+│       │           │   └── PreferenceManager.kt
+│       │           ├── ui/
+│       │           │   ├── comps/
+│       │           │   │   ├── AddClassBottomSheet.kt
+│       │           │   │   ├── Dialog.kt
+│       │           │   │   ├── Popup.kt
+│       │           │   │   ├── Preference.kt
+│       │           │   │   ├── ScheduleItem.kt
+│       │           │   │   ├── SetClassStatusSheet.kt
+│       │           │   │   ├── Tabs.kt
+│       │           │   │   └── Theme.kt
+│       │           │   └── screens/
+│       │           │       └── Navigation.kt
+│       │           └── util/
+│       │               ├── AttendanceApp.kt
+│       │               ├── AuthenticationActivity.java
+│       │               └── MainActivity.kt      
+│       ├── res/
+│       │   ├── drawable/
+│       │   │   ├── baseline_access_time_24.xml
+│       │   │   ├── baseline_add_24.xml
+│       │   │   ├── baseline_arrow_back_24.xml
+│       │   │   ├── baseline_calendar_today_24.xml
+│       │   │   ├── baseline_check_24.xml
+│       │   │   ├── baseline_colorize_24.xml
+│       │   │   ├── baseline_contrast_24.xml
+│       │   │   ├── baseline_delete_24.xml
+│       │   │   ├── baseline_edit_24.xml
+│       │   │   ├── baseline_format_color_fill_24.xml
+│       │   │   ├── baseline_keyboard_arrow_left_24.xml
+│       │   │   ├── baseline_keyboard_arrow_right_24.xml
+│       │   │   ├── baseline_lock_24.xml
+│       │   │   ├── baseline_palette_24.xml
+│       │   │   ├── baseline_person_24.xml
+│       │   │   ├── baseline_privacy_tip_24.xml
+│       │   │   ├── baseline_save_24.xml
+│       │   │   ├── baseline_settings_24.xml
+│       │   │   ├── baseline_table_chart_24.xml
+│       │   │   ├── baseline_warning_24.xml
+│       │   │   ├── button_background.xml
+│       │   │   ├── github.xml
+│       │   │   ├── ic_launcher_monochrome.xml
+│       │   │   └── rounded_edittext.xml
+│       │   ├── layout/
+│       │   │   └── activity_authentication.xml
+│       │   ├── mipmap/
+│       │   │   ├── ic_launcher.png
+│       │   │   ├── ic_launcher_foreground.png
+│       │   │   └── ic_launcher_round.png
+│       │   ├── values/
+│       │   │   ├── colors.xml
+│       │   │   ├── ic_launcher_background.xml
+│       │   │   ├── settings.xml
+│       │   │   └── theme.xml
+│       │   └── xml/
+│       │       └── ic_launcher-playstore.png
+│       └── sqldelight/
+│           ├── AndroidManifest.xml
+│           └── ic_launcher-playstore.png
+├── config/
+│   └── detekt/
+│       ├── argsfile
+│       ├── baseline.xml
+│       └── detekt.yml
+├── fastlane/
+│   ├── metadata/
+│   │   └── android/
+│   │       └── en-US/
+│   │           └── images/
+│   ├── Appfile
+│   ├── Fastfile
+│   └── Screengrabfile
+└── gradle/
+    └── wrapper
 ```
 
 ## Contributors
@@ -132,8 +205,6 @@ The timeline for the Self Attendance Tracker project is as follows:
 
 ### [Version 1.2.2] - 2024-10-1
 - Production of Login and Register function for better security
-
-- Currently Under Development
 
 ## Acknowledgments
 Special thanks to Self-Attendance-Tracker (https://github.com/rahul-gill/Self-Attendance-Tracker.git) and Rahul Gill for their foundational work.
